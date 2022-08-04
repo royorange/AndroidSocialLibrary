@@ -28,12 +28,25 @@ class SocialSDK private constructor() {
         }
 
         @JvmStatic
-        fun setupConfig(context: Context,builder: PlatformConfig.Builder){
-            instance.config = builder.build()
-            // 微博提前初始化，否则可能无法调起
-            if(instance.config[SocialPlatform.WEIBO]!=null){
-                instance.buildProcessor(context.applicationContext,SocialPlatform.WEIBO)
+        fun setupConfig(builder: PlatformConfig.Builder){
+            if (!instance::config.isInitialized){
+                instance.config = builder.build()
             }
+        }
+    }
+
+    /**
+     * 预初始化社交平台sdk，优化一些sdk使用时的异常
+     * 必须保证已获取隐私权限, 需要先设置配置项
+     *
+     */
+    fun prefetchSdkInit(context: Context){
+        if(!this::config.isInitialized){
+            return
+        }
+        // 微博提前初始化，否则可能无法调起
+        if(instance.config[SocialPlatform.WEIBO]!=null){
+            instance.buildProcessor(context.applicationContext,SocialPlatform.WEIBO)
         }
     }
 
@@ -101,7 +114,7 @@ class SocialSDK private constructor() {
         if(param.platform == null){
             error("platform 未设置")
         }
-        val processor = buildProcessor(param.activity!!.applicationContext,param.platform!!)
+        val processor = buildProcessor(param.activity.applicationContext,param.platform!!)
         when(param.action){
             ShareAction.VIDEO ->{
                 processor.shareVideo(param as ShareVideoParam)
