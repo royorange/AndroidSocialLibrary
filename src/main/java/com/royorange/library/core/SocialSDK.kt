@@ -50,8 +50,8 @@ class SocialSDK private constructor() {
         }
     }
 
-    fun provideProcessor(platform: SocialPlatform):BaseProcessor{
-        return processorMap[platform] ?: throw IllegalArgumentException("platform not found")
+    fun provideProcessor(context: Context,platform: SocialPlatform):BaseProcessor{
+        return buildProcessor(context,platform)
     }
 
     /**
@@ -84,7 +84,7 @@ class SocialSDK private constructor() {
      */
     fun handleActivityResult(activity: Activity, requestCode:Int, resultCode:Int, intent:Intent?){
         if(instance.config[SocialPlatform.WEIBO]!=null){
-            val processor = provideProcessor(SocialPlatform.WEIBO) as WeiboProcessor
+            val processor = provideProcessor(activity,SocialPlatform.WEIBO) as WeiboProcessor
             processor.handleActivityResult(activity, requestCode, resultCode, intent)
         }
     }

@@ -15,7 +15,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
  * Created by Roy on 2022/7/8
  */
 open class WechatEntryActivity : Activity(), IWXAPIEventHandler {
-    private var processor = (SocialSDK.instance.provideProcessor(SocialPlatform.WECHAT) as WechatProcessor)
+    private var processor = (SocialSDK.instance.provideProcessor(applicationContext,SocialPlatform.WECHAT) as WechatProcessor)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
