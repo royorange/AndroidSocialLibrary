@@ -112,8 +112,10 @@ class WechatProcessor(context: Context,config:PlatformConfig): BaseProcessor(con
             }else{
                 context.applicationContext.packageManager.getApplicationIcon(context.applicationContext.packageName)?.let {
                     val bitmap = it.toBitmap()
-                    msg.thumbData = bitmap.toByteArray()
-                    bitmap.recycle()
+                    if (!bitmap.isRecycled){
+                        msg.thumbData = bitmap.toByteArray()
+                        bitmap.recycle()
+                    }
                 }
             }
             sendReq(msg,param.platform!!)
