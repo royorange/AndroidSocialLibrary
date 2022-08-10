@@ -15,17 +15,17 @@ import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
  * Created by Roy on 2022/7/8
  */
 open class WechatEntryActivity : Activity(), IWXAPIEventHandler {
-    private lateinit var processor:WechatProcessor
+    private var processor:WechatProcessor? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         processor = (SocialSDK.instance.provideProcessor(applicationContext,SocialPlatform.WECHAT) as WechatProcessor)
-        processor.api?.handleIntent(intent, this)
+        processor!!.api?.handleIntent(intent, this)
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        processor.api?.handleIntent(intent, this)
+        processor?.api?.handleIntent(intent, this)
     }
 
     override fun onReq(baseReq: BaseReq) {
@@ -34,7 +34,7 @@ open class WechatEntryActivity : Activity(), IWXAPIEventHandler {
 
     override fun onResp(baseResp: BaseResp) {
         if (baseResp is SendAuth.Resp){
-            processor.handleAuthResponse(baseResp)
+            processor?.handleAuthResponse(baseResp)
         }
         finish()
     }
