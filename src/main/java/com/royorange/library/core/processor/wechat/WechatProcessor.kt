@@ -188,6 +188,8 @@ class WechatProcessor(context: Context,config:PlatformConfig): BaseProcessor(con
                                 is Result.Success<UserInfo> -> {
                                     result.data.userInfo = userInfoResult.data
                                 }
+                                is Result.Error -> {
+                                }
                             }
                             authListener?.onSuccess(SocialPlatform.WECHAT,result.data)
                         }

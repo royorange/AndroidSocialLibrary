@@ -108,9 +108,6 @@ class SocialSDK private constructor() {
         if(!this::config.isInitialized){
             error("请先初始化分享配置")
         }
-        if(param.activity == null){
-            error("activity 未设置")
-        }
         if(param.platform == null){
             error("platform 未设置")
         }
@@ -128,6 +125,7 @@ class SocialSDK private constructor() {
             ShareAction.WEB ->{
                 processor.shareWeb(param as ShareWebParam)
             }
+            else -> {}
         }
     }
 
