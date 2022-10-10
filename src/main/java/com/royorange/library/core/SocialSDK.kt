@@ -3,6 +3,7 @@ package com.royorange.library.core
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.royorange.library.core.auth.SocialAuthListener
 import com.royorange.library.core.param.*
 import com.royorange.library.core.processor.base.BaseProcessor
@@ -22,6 +23,8 @@ class SocialSDK private constructor() {
     private val processorMap = HashMap<SocialPlatform, BaseProcessor>()
 
     companion object {
+        const val TAG = "SocialSDK"
+
         @JvmStatic
         val instance: SocialSDK by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
             SocialSDK()
@@ -42,6 +45,7 @@ class SocialSDK private constructor() {
      */
     fun prefetchSdkInit(context: Context){
         if(!this::config.isInitialized){
+            Log.e(TAG,"请先初始化配置项")
             return
         }
         // 微博提前初始化，否则可能无法调起
@@ -106,9 +110,11 @@ class SocialSDK private constructor() {
 
     private fun innerShare(param:ShareParam){
         if(!this::config.isInitialized){
-            error("请先初始化分享配置")
+            Log.e(TAG,"请先初始化配置")
+            error("请先初始化配置")
         }
         if(param.platform == null){
+            Log.e(TAG,"该分享的平台不能为空")
             error("platform 未设置")
         }
         val processor = buildProcessor(param.activity.applicationContext,param.platform!!)
@@ -144,10 +150,12 @@ class SocialSDK private constructor() {
                 WechatProcessor(context,config[SocialPlatform.WECHAT]?: error("微信config未设置"))
             }
             else->{
+                Log.e(TAG,"该平台暂不支持")
                 error("platform not support")
             }
         }
         if(!processor.checkConfig()){
+            Log.e(TAG,"请检查${platform}平台配置")
             error("share config error,check if the key and secret is set")
         }
         processor.init()

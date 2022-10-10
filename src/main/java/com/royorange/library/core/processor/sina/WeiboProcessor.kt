@@ -29,8 +29,10 @@ import com.sina.weibo.sdk.common.UiError
 import com.sina.weibo.sdk.openapi.IWBAPI
 import com.sina.weibo.sdk.openapi.SdkListener
 import com.sina.weibo.sdk.openapi.WBAPIFactory
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 /**
@@ -123,7 +125,9 @@ class WeiboProcessor(context: Context,config: PlatformConfig) : BaseProcessor(co
 //                imageObj.imageData = msg.mediaObject.thumbData
 //                msg.imageObject = imageObj
 //            }
-            weiboApi.shareMessage(param.activity,msg,true)
+            withContext(Dispatchers.Main){
+                weiboApi.shareMessage(param.activity,msg,true)
+            }
         }
     }
 
@@ -166,7 +170,6 @@ class WeiboProcessor(context: Context,config: PlatformConfig) : BaseProcessor(co
             context.applicationContext.packageManager.getApplicationIcon(context.applicationContext.packageName).let {
                 val bitmap = it.toBitmap()
                 webObj.thumbData = bitmap.toByteArray()
-                bitmap.recycle()
             }
         }
         webObj.actionUrl = param.url
