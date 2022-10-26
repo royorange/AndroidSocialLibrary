@@ -39,7 +39,7 @@ import java.util.*
  * Created by Roy on 2021/8/5
  */
 class WeiboProcessor(context: Context,config: PlatformConfig) : BaseProcessor(context,config){
-    lateinit var weiboApi:IWBAPI
+    private lateinit var weiboApi:IWBAPI
     private val bitmapRepository = BitmapRepository()
 
     companion object {
@@ -51,6 +51,9 @@ class WeiboProcessor(context: Context,config: PlatformConfig) : BaseProcessor(co
         return !TextUtils.isEmpty(config.appId)&&!TextUtils.isEmpty(config.redirectUrl)
     }
 
+    /**
+     * 初始化微博sdk
+     */
     override fun init() {
         weiboApi = WBAPIFactory.createWBAPI(context)
         weiboApi.registerApp(context, AuthInfo(context,config.appId,config.redirectUrl,""),object: SdkListener{
@@ -66,21 +69,17 @@ class WeiboProcessor(context: Context,config: PlatformConfig) : BaseProcessor(co
 
     override fun getAuthorizedData(context: Context, listener: SocialAuthListener?) {
         if(context !is Activity){
-            error("context must be activity")
-            return
+            error("for weibo usage, context must be activity")
         }
-        weiboApi.authorize(context as Activity,object : WbAuthListener {
+        weiboApi.authorize(context,object : WbAuthListener {
             override fun onComplete(token: Oauth2AccessToken?) {
-                val data = token?.run {
+                token?.run {
                     val weiboAuth = WeiboAuth()
                     weiboAuth.uid = uid
                     weiboAuth.accessToken = accessToken
                     weiboAuth.refreshToken = refreshToken
                     weiboAuth.expiresIn = expiresTime
-                    weiboAuth
-                }
-                if(data!=null){
-                    listener?.onSuccess(SocialPlatform.WEIBO,data)
+                    listener?.onSuccess(SocialPlatform.WEIBO,weiboAuth)
                 }
             }
 
@@ -178,6 +177,6 @@ class WeiboProcessor(context: Context,config: PlatformConfig) : BaseProcessor(co
     }
 
     fun handleActivityResult(activity: Activity,requestCode:Int,resultCode:Int,intent:Intent?){
-        weiboApi?.authorizeCallback(activity,requestCode,resultCode,intent)
+        weiboApi.authorizeCallback(activity,requestCode,resultCode,intent)
     }
 }

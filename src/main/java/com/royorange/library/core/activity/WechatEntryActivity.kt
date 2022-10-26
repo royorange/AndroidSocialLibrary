@@ -20,7 +20,7 @@ open class WechatEntryActivity : Activity(), IWXAPIEventHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         processor = (SocialSDK.instance.provideProcessor(applicationContext,SocialPlatform.WECHAT) as WechatProcessor)
-        processor!!.api?.handleIntent(intent, this)
+        processor?.api?.handleIntent(intent, this)
     }
 
     override fun onNewIntent(intent: Intent?) {

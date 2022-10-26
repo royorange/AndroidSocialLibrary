@@ -31,6 +31,8 @@ import kotlinx.coroutines.launch
  */
 class WechatProcessor(context: Context,config:PlatformConfig): BaseProcessor(context,config) {
     lateinit var api: IWXAPI
+     private set
+
     private val bitmapRepository = BitmapRepository()
     private val wechatRepository = WechatRepository()
     private var authListener:SocialAuthListener? = null
@@ -164,7 +166,7 @@ class WechatProcessor(context: Context,config:PlatformConfig): BaseProcessor(con
             SocialPlatform.WECHAT_TIMELINE -> SendMessageToWX.Req.WXSceneTimeline
             else -> SendMessageToWX.Req.WXSceneSession
         }
-        api?.sendReq(req)
+        api.sendReq(req)
     }
 
     fun handleAuthResponse(resp: SendAuth.Resp){

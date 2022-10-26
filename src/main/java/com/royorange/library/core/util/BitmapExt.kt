@@ -23,8 +23,8 @@ fun Bitmap.compressSize(maxSize:Int):Bitmap{
 
 fun Bitmap.compressIfOverMaxByte(limitByteSize:Int):Bitmap{
     return if(byteCount>limitByteSize){
-        var scaledHeight:Int
-        var scaledWidth:Int
+        val scaledHeight:Int
+        val scaledWidth:Int
         if(width>height){
             val base = round(width/height.toFloat())
             // 默认以argb8888作为图片质量格式，每个像素占4个字节
