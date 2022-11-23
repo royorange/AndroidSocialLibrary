@@ -31,3 +31,52 @@ SocialSDK.setupConfig(PlatformConfig.Builder()
  .wechat(微信ID, 微信SECRET)
  .weibo(微博id, 微博redirect url, 自定义provider))
 ```
+## 分享
+分享网页链接
+```
+val webParam = ShareWebParam(params.activity)
+webParam.url(url).title(title).description(description)
+```
+分享图片
+```
+ val imageParam = ShareImageParam(params.activity)
+ imageParam.bitmap(bitmap).title(title).url(url)
+```
+设置缩略图
+```
+// 在线url
+ param.thumbnail(imageUrl)
+// Bitmap 
+ param.thumbnail(bitmap)
+// 本地资源
+ param.thumbnail(res)
+```
+设置分享平台
+```
+// 微信
+param.platform(SocialPlatform.WECHAT)
+// 朋友圈
+param.platform(SocialPlatform.WECHAT_TIMELINE)
+// 微博
+param.platform(SocialPlatform.WEIBO)
+```
+调用分享
+```
+SocialSDK.instance.share(param)
+```
+
+## 获取平台认证信息
+```
+SocialSDK.instance.getAuthorizedInfo(context as Activity,SocialPlatform.WECHAT,object : SocialAuthListener{
+            override fun onSuccess(platform: SocialPlatform, authInfo: BaseAuthInfo) {
+                // 认证成功
+                val openId = (authInfo as WechatAuth).openId
+                val accessToken = authInfo.accessToken
+                ...
+            }
+
+            override fun onFailure(platform: SocialPlatform, code: Int) {
+                // error
+            }
+        })
+```
